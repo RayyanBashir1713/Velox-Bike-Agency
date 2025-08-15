@@ -38,47 +38,225 @@ async function handleRoute(request, { params }) {
   try {
     const db = await connectToMongo()
 
-    // Root endpoint - GET /api/root (since /api/ is not accessible with catch-all)
-    if (route === '/root' && method === 'GET') {
-      return handleCORS(NextResponse.json({ message: "Hello World" }))
-    }
-    // Root endpoint - GET /api/root (since /api/ is not accessible with catch-all)
+    // Root endpoint - GET /api/
     if (route === '/' && method === 'GET') {
-      return handleCORS(NextResponse.json({ message: "Hello World" }))
+      return handleCORS(NextResponse.json({ 
+        message: "VeloX Bike Agency API",
+        version: "1.0.0",
+        endpoints: [
+          "GET /api/ - API info",
+          "POST /api/contact - Contact form submission",
+          "GET /api/bikes - Get all bikes",
+          "POST /api/newsletter - Newsletter subscription"
+        ]
+      }))
     }
 
-    // Status endpoints - POST /api/status
-    if (route === '/status' && method === 'POST') {
+    // Contact form submission - POST /api/contact
+    if (route === '/contact' && method === 'POST') {
       const body = await request.json()
       
-      if (!body.client_name) {
+      if (!body.name || !body.email || !body.message) {
         return handleCORS(NextResponse.json(
-          { error: "client_name is required" }, 
+          { error: "Name, email, and message are required" }, 
           { status: 400 }
         ))
       }
 
-      const statusObj = {
+      const contactEntry = {
         id: uuidv4(),
-        client_name: body.client_name,
-        timestamp: new Date()
+        name: body.name,
+        email: body.email,
+        message: body.message,
+        timestamp: new Date(),
+        status: 'new'
       }
 
-      await db.collection('status_checks').insertOne(statusObj)
-      return handleCORS(NextResponse.json(statusObj))
+      await db.collection('contacts').insertOne(contactEntry)
+      
+      return handleCORS(NextResponse.json({
+        success: true,
+        message: "Thank you for your message! We'll get back to you soon.",
+        id: contactEntry.id
+      }))
     }
 
-    // Status endpoints - GET /api/status
-    if (route === '/status' && method === 'GET') {
-      const statusChecks = await db.collection('status_checks')
+    // Get all contact messages - GET /api/contact
+    if (route === '/contact' && method === 'GET') {
+      const contacts = await db.collection('contacts')
         .find({})
-        .limit(1000)
+        .sort({ timestamp: -1 })
+        .limit(100)
         .toArray()
 
       // Remove MongoDB's _id field from response
-      const cleanedStatusChecks = statusChecks.map(({ _id, ...rest }) => rest)
+      const cleanedContacts = contacts.map(({ _id, ...rest }) => rest)
       
-      return handleCORS(NextResponse.json(cleanedStatusChecks))
+      return handleCORS(NextResponse.json(cleanedContacts))
+    }
+
+    // Bikes endpoint - GET /api/bikes
+    if (route === '/bikes' && method === 'GET') {
+      const bikes = [
+        {
+          id: 1,
+          name: "VeloX Pro",
+          type: "Road Bike",
+          price: 2899,
+          image: "https://images.unsplash.com/photo-1569951825078-7f1e908fee0e",
+          features: ["Carbon Frame", "22-Speed", "Disc Brakes"],
+          description: "Professional racing bike with aerodynamic design",
+          specifications: {
+            weight: "8.5 kg",
+            frame: "Carbon Fiber",
+            gears: "22-Speed Shimano",
+            brakes: "Hydraulic Disc",
+            wheels: "700c Carbon"
+          },
+          inStock: true
+        },
+        {
+          id: 2,
+          name: "Urban Explorer",
+          type: "Electric Bike",
+          price: 3499,
+          image: "https://images.unsplash.com/photo-1569951827666-a7ad30bbe8c8",
+          features: ["Electric Motor", "50mi Range", "Smart Display"],
+          description: "Perfect for city commuting with electric assistance",
+          specifications: {
+            weight: "22 kg",
+            motor: "250W Hub Motor",
+            battery: "48V 14Ah",
+            range: "50 miles",
+            charging: "4-6 hours"
+          },
+          inStock: true
+        },
+        {
+          id: 3,
+          name: "Mountain Beast",
+          type: "Mountain Bike",
+          price: 2199,
+          image: "https://images.unsplash.com/photo-1605737710291-98fe72919667",
+          features: ["Full Suspension", "29-inch Wheels", "All-Terrain"],
+          description: "Conquer any trail with this rugged mountain bike",
+          specifications: {
+            weight: "14 kg",
+            suspension: "Full Suspension",
+            wheels: "29-inch",
+            gears: "21-Speed",
+            brakes: "Mechanical Disc"
+          },
+          inStock: true
+        },
+        {
+          id: 4,
+          name: "Speed Demon",
+          type: "Racing Bike",
+          price: 4299,
+          image: "https://images.unsplash.com/photo-1704902629275-445ade658dc8",
+          features: ["Ultra Light", "Aerodynamic", "Pro Components"],
+          description: "Ultimate performance for competitive cycling",
+          specifications: {
+            weight: "7.2 kg",
+            frame: "Ultra-Light Carbon",
+            gears: "Electronic Shifting",
+            brakes: "Carbon Disc",
+            wheels: "Aero Carbon Wheels"
+          },
+          inStock: true
+        }
+      ]
+
+      return handleCORS(NextResponse.json(bikes))
+    }
+
+    // Get specific bike - GET /api/bikes/:id
+    if (route.startsWith('/bikes/') && method === 'GET') {
+      const bikeId = parseInt(route.split('/')[2])
+      
+      // This would typically fetch from database
+      const bikes = [
+        {
+          id: 1,
+          name: "VeloX Pro",
+          type: "Road Bike",
+          price: 2899,
+          image: "https://images.unsplash.com/photo-1569951825078-7f1e908fee0e",
+          features: ["Carbon Frame", "22-Speed", "Disc Brakes"],
+          description: "Professional racing bike with aerodynamic design"
+        }
+        // ... other bikes
+      ]
+      
+      const bike = bikes.find(b => b.id === bikeId)
+      
+      if (!bike) {
+        return handleCORS(NextResponse.json(
+          { error: "Bike not found" }, 
+          { status: 404 }
+        ))
+      }
+      
+      return handleCORS(NextResponse.json(bike))
+    }
+
+    // Newsletter subscription - POST /api/newsletter
+    if (route === '/newsletter' && method === 'POST') {
+      const body = await request.json()
+      
+      if (!body.email) {
+        return handleCORS(NextResponse.json(
+          { error: "Email is required" }, 
+          { status: 400 }
+        ))
+      }
+
+      const subscription = {
+        id: uuidv4(),
+        email: body.email,
+        timestamp: new Date(),
+        active: true
+      }
+
+      await db.collection('newsletter_subscriptions').insertOne(subscription)
+      
+      return handleCORS(NextResponse.json({
+        success: true,
+        message: "Successfully subscribed to newsletter!",
+        id: subscription.id
+      }))
+    }
+
+    // Bike booking/inquiry - POST /api/booking
+    if (route === '/booking' && method === 'POST') {
+      const body = await request.json()
+      
+      if (!body.bikeId || !body.customerName || !body.customerEmail) {
+        return handleCORS(NextResponse.json(
+          { error: "Bike ID, customer name, and email are required" }, 
+          { status: 400 }
+        ))
+      }
+
+      const booking = {
+        id: uuidv4(),
+        bikeId: body.bikeId,
+        customerName: body.customerName,
+        customerEmail: body.customerEmail,
+        customerPhone: body.customerPhone || '',
+        message: body.message || '',
+        timestamp: new Date(),
+        status: 'pending'
+      }
+
+      await db.collection('bookings').insertOne(booking)
+      
+      return handleCORS(NextResponse.json({
+        success: true,
+        message: "Booking inquiry submitted successfully! We'll contact you soon.",
+        bookingId: booking.id
+      }))
     }
 
     // Route not found

@@ -1,15 +1,23 @@
 import './globals.css'
+import { ThemeProvider } from '@/components/theme-provider'
 
 export const metadata = {
-  title: 'Next.js MongoDB Template',
-  description: 'A simple template with App Router, MongoDB, and shadcn/ui',
+  title: 'VeloX - Premium Bike Agency',
+  description: 'Discover the future of cycling with our cutting-edge bikes. Premium 3D showcase and interactive experience.',
 }
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
-      <body>
-        {children}
+    <html lang="en" suppressHydrationWarning>
+      <body className="antialiased">
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange={false}
+        >
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   )
