@@ -41,9 +41,9 @@ class VeloXAPITester:
                 print(f"   Response: {response_data}")
     
     def test_api_root(self):
-        """Test GET /api/ - API info endpoint"""
+        """Test GET /api - API info endpoint"""
         try:
-            response = requests.get(f"{BASE_URL}/", headers=HEADERS, timeout=10)
+            response = requests.get(f"{BASE_URL}", headers=HEADERS, timeout=10)
             
             if response.status_code == 200:
                 data = response.json()
