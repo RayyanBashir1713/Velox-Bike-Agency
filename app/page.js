@@ -11,7 +11,10 @@ import { Textarea } from '@/components/ui/textarea'
 import { Badge } from '@/components/ui/badge'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { BikeModel } from '@/components/bike-model'
+import { EnhancedBikeModel } from '@/components/enhanced-bike-model'
 import { ParallaxSection } from '@/components/parallax-section'
+import { LoadingSpinner } from '@/components/ui/loading-spinner'
+import { GradientCard } from '@/components/ui/gradient-card'
 import { 
   Menu, 
   X, 
