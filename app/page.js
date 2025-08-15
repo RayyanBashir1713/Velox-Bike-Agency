@@ -343,26 +343,27 @@ export default function App() {
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
-                whileHover={{ y: -10 }}
+                whileHover={{ y: -10, scale: 1.02 }}
               >
-                <Card className="overflow-hidden group cursor-pointer">
+                <GradientCard gradient="primary" className="overflow-hidden group cursor-pointer h-full">
                   <div className="relative h-64 overflow-hidden">
                     <img
                       src={bike.image}
                       alt={bike.name}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                     />
-                    <Badge className="absolute top-4 left-4">
+                    <Badge className="absolute top-4 left-4 bg-primary/90 text-primary-foreground">
                       {bike.type}
                     </Badge>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   </div>
-                  <CardContent className="p-6">
+                  <div className="p-6">
                     <h3 className="text-xl font-semibold mb-2">{bike.name}</h3>
-                    <p className="text-muted-foreground mb-4">{bike.description}</p>
+                    <p className="text-muted-foreground mb-4 text-sm">{bike.description}</p>
                     
                     <div className="flex flex-wrap gap-2 mb-4">
                       {bike.features.map((feature) => (
-                        <Badge key={feature} variant="secondary" className="text-xs">
+                        <Badge key={feature} variant="secondary" className="text-xs bg-secondary/50">
                           {feature}
                         </Badge>
                       ))}
@@ -370,12 +371,12 @@ export default function App() {
                     
                     <div className="flex justify-between items-center">
                       <span className="text-2xl font-bold text-primary">{bike.price}</span>
-                      <Button size="sm">
+                      <Button size="sm" className="group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
                         View Details
                       </Button>
                     </div>
-                  </CardContent>
-                </Card>
+                  </div>
+                </GradientCard>
               </motion.div>
             ))}
           </div>
