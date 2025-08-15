@@ -233,16 +233,30 @@ export default function App() {
         </ParallaxSection>
 
         {/* 3D Hero Bike */}
-        <div className="absolute right-0 top-0 w-1/2 h-full opacity-30 md:opacity-60">
+        <div className="absolute right-0 top-0 w-1/2 h-full opacity-40 md:opacity-70">
           <Canvas>
-            <PerspectiveCamera makeDefault position={[0, 0, 5]} />
-            <ambientLight intensity={0.5} />
-            <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} />
+            <PerspectiveCamera makeDefault position={[0, 2, 6]} />
+            <ambientLight intensity={0.4} />
+            <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={1.2} />
+            <pointLight position={[-10, -10, -10]} intensity={0.5} />
             <Environment preset="city" />
             <Suspense fallback={null}>
-              <BikeModel position={[0, -1, 0]} rotation={[0, Math.PI / 4, 0]} />
+              <EnhancedBikeModel 
+                position={[0, -1, 0]} 
+                rotation={[0, Math.PI / 4, 0]}
+                scale={[1.2, 1.2, 1.2]}
+                bikeType="road"
+                onInteraction={(type) => console.log('Bike interaction:', type)}
+              />
             </Suspense>
-            <OrbitControls enableZoom={false} enablePan={false} autoRotate autoRotateSpeed={0.5} />
+            <OrbitControls 
+              enableZoom={false} 
+              enablePan={false} 
+              autoRotate 
+              autoRotateSpeed={0.8}
+              maxPolarAngle={Math.PI / 2}
+              minPolarAngle={Math.PI / 3}
+            />
           </Canvas>
         </div>
 
