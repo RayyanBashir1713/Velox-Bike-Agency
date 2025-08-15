@@ -10,6 +10,10 @@
         "start": "next start"
     },
     "dependencies": {
+        "@react-three/drei": "^9.111.3",
+        "@react-three/fiber": "^8.17.9",
+        "framer-motion": "^11.11.14",
+        "three": "^0.169.0",
         "@hookform/resolvers": "^5.1.1",
         "@radix-ui/react-accordion": "^1.2.11",
         "@radix-ui/react-alert-dialog": "^1.1.14",
