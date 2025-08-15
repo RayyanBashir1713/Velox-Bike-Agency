@@ -398,57 +398,75 @@ export default function App() {
 
           <div className="grid lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2">
-              <Card className="h-[500px]">
+              <GradientCard gradient="accent" className="h-[500px]">
                 <div className="w-full h-full">
                   <Canvas>
-                    <PerspectiveCamera makeDefault position={[0, 2, 8]} />
-                    <ambientLight intensity={0.4} />
-                    <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={1} />
-                    <spotLight position={[-10, -10, -10]} angle={0.15} penumbra={1} intensity={0.5} />
-                    <Environment preset="warehouse" />
-                    <Suspense fallback={null}>
-                      <BikeModel 
+                    <PerspectiveCamera makeDefault position={[0, 3, 10]} />
+                    <ambientLight intensity={0.3} />
+                    <spotLight position={[10, 15, 10]} angle={0.2} penumbra={1} intensity={1.5} />
+                    <spotLight position={[-10, -15, -10]} angle={0.2} penumbra={1} intensity={0.8} color="#4f46e5" />
+                    <pointLight position={[0, 10, 0]} intensity={0.5} color="#f59e0b" />
+                    <Environment preset="warehouse" backgroundIntensity={0.3} />
+                    <Suspense fallback={<LoadingSpinner className="w-8 h-8" />}>
+                      <EnhancedBikeModel 
                         position={[0, -2, 0]} 
                         rotation={[0, selectedBike * Math.PI / 2, 0]}
-                        scale={[1.5, 1.5, 1.5]}
+                        scale={[1.8, 1.8, 1.8]}
+                        bikeType={['road', 'electric', 'mountain', 'racing'][selectedBike]}
+                        onInteraction={(type) => console.log('Showcase bike:', type)}
                       />
                     </Suspense>
                     <OrbitControls 
                       enableZoom={true} 
                       enablePan={false} 
                       autoRotate={false}
-                      minDistance={3}
-                      maxDistance={15}
+                      minDistance={5}
+                      maxDistance={20}
+                      maxPolarAngle={Math.PI / 1.8}
+                      minPolarAngle={Math.PI / 6}
                     />
                   </Canvas>
                 </div>
-              </Card>
+              </GradientCard>
             </div>
 
             <div className="space-y-4">
-              <h3 className="text-2xl font-semibold mb-6">Select Model</h3>
+              <h3 className="text-2xl font-semibold mb-6 flex items-center gap-2">
+                <span className="w-2 h-2 bg-primary rounded-full animate-pulse"></span>
+                Select Model
+              </h3>
               {bikes.map((bike, index) => (
                 <motion.div
                   key={bike.id}
                   className={`p-4 rounded-lg border cursor-pointer transition-all ${
                     selectedBike === index 
-                      ? 'border-primary bg-primary/10' 
-                      : 'border-border hover:border-primary/50'
+                      ? 'border-primary bg-primary/10 shadow-lg shadow-primary/20' 
+                      : 'border-border hover:border-primary/50 hover:bg-primary/5'
                   }`}
                   onClick={() => setSelectedBike(index)}
-                  whileHover={{ scale: 1.02 }}
+                  whileHover={{ scale: 1.02, x: 4 }}
                   whileTap={{ scale: 0.98 }}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.1 }}
                 >
                   <div className="flex items-center space-x-4">
-                    <img
-                      src={bike.image}
-                      alt={bike.name}
-                      className="w-16 h-16 object-cover rounded"
-                    />
-                    <div>
-                      <h4 className="font-semibold">{bike.name}</h4>
-                      <p className="text-sm text-muted-foreground">{bike.type}</p>
-                      <p className="text-primary font-bold">{bike.price}</p>
+                    <div className="w-16 h-16 rounded-lg overflow-hidden bg-gradient-to-br from-primary/20 to-primary/5 flex-shrink-0">
+                      <img
+                        src={bike.image}
+                        alt={bike.name}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h4 className="font-semibold truncate">{bike.name}</h4>
+                      <p className="text-sm text-muted-foreground truncate">{bike.type}</p>
+                      <div className="flex items-center justify-between mt-1">
+                        <p className="text-primary font-bold">{bike.price}</p>
+                        {selectedBike === index && (
+                          <div className="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </motion.div>
