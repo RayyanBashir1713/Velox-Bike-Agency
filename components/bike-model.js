@@ -1,9 +1,9 @@
 'use client'
 
-import { useRef, useState, useEffect } from 'react'
+import { useRef, useState } from 'react'
 import { useFrame } from '@react-three/fiber'
-import { Box, Cylinder, Group } from '@react-three/drei'
-import { motion } from 'framer-motion-3d'
+import { Box, Cylinder } from '@react-three/drei'
+import * as THREE from 'three'
 
 export function BikeModel({ position = [0, 0, 0], rotation = [0, 0, 0], scale = [1, 1, 1] }) {
   const groupRef = useRef()
