@@ -11,7 +11,7 @@ import time
 from datetime import datetime
 
 # Configuration
-BASE_URL = "https://next-3d-showcase.preview.emergentagent.com/api"
+BASE_URL = "http://localhost:3000/api"
 HEADERS = {"Content-Type": "application/json"}
 
 class VeloXAPITester:
