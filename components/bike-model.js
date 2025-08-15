@@ -17,7 +17,7 @@ export function BikeModel({ position = [0, 0, 0], rotation = [0, 0, 0], scale = 
   })
 
   return (
-    <Group 
+    <group 
       ref={groupRef} 
       position={position} 
       rotation={rotation} 
@@ -26,7 +26,7 @@ export function BikeModel({ position = [0, 0, 0], rotation = [0, 0, 0], scale = 
       onPointerOut={() => setHovered(false)}
     >
       {/* Bike Frame */}
-      <Group>
+      <group>
         {/* Main Triangle Frame */}
         <Box
           args={[0.1, 2, 0.1]}
