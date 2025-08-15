@@ -3,7 +3,6 @@
 import { useRef, useState } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { Box, Cylinder } from '@react-three/drei'
-import * as THREE from 'three'
 
 export function BikeModel({ position = [0, 0, 0], rotation = [0, 0, 0], scale = [1, 1, 1] }) {
   const groupRef = useRef()
@@ -74,10 +73,10 @@ export function BikeModel({ position = [0, 0, 0], rotation = [0, 0, 0], scale = 
         >
           <meshStandardMaterial color="#1a202c" />
         </Box>
-      </Group>
+      </group>
 
       {/* Wheels */}
-      <Group>
+      <group>
         {/* Front Wheel */}
         <Cylinder
           args={[0.8, 0.8, 0.1, 32]}
@@ -119,7 +118,7 @@ export function BikeModel({ position = [0, 0, 0], rotation = [0, 0, 0], scale = 
             <meshStandardMaterial color="#4a5568" metalness={0.6} roughness={0.4} />
           </Box>
         ))}
-      </Group>
+      </group>
 
       {/* Seat */}
       <Box
@@ -130,7 +129,7 @@ export function BikeModel({ position = [0, 0, 0], rotation = [0, 0, 0], scale = 
       </Box>
 
       {/* Pedals and Chain */}
-      <Group>
+      <group>
         {/* Chain Ring */}
         <Cylinder
           args={[0.3, 0.3, 0.05, 16]}
@@ -154,7 +153,7 @@ export function BikeModel({ position = [0, 0, 0], rotation = [0, 0, 0], scale = 
         >
           <meshStandardMaterial color="#1a202c" />
         </Box>
-      </Group>
+      </group>
 
       {/* Floating particles for effect */}
       {hovered && [...Array(10)].map((_, i) => (
@@ -176,6 +175,6 @@ export function BikeModel({ position = [0, 0, 0], rotation = [0, 0, 0], scale = 
           />
         </mesh>
       ))}
-    </Group>
+    </group>
   )
 }
